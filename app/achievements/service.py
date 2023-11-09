@@ -1,3 +1,4 @@
+import os
 import uuid
 from datetime import timedelta
 from enum import Enum
@@ -96,6 +97,8 @@ class AchievementService:
         file.filename = f"{uuid.uuid4()}.jpg"
         contents = await file.read()
         path = f'{IMAGEDIR}{file.filename}'
+        image_dir = os.path.join(IMAGEDIR)
+        os.makedirs(image_dir, exist_ok=True)
         with open(path, 'wb') as f:
             f.write(contents)
         return file.filename
