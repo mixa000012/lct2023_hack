@@ -122,7 +122,7 @@ async def grant_admin_privilege(
         nickname: str,
         db: AsyncSession = Depends(get_db),
         current_user: User = Depends(get_current_user_from_token),
-) -> UserShow:
+):
     if not current_user.is_superadmin:
         raise HTTPException(status_code=403, detail="Forbidden.")
     if current_user.email == nickname:

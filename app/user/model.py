@@ -1,7 +1,7 @@
 import uuid
 from enum import Enum
 
-from sqlalchemy import Boolean
+from sqlalchemy import Boolean, Table
 from sqlalchemy import Column
 from sqlalchemy import DateTime
 from sqlalchemy import ForeignKey
@@ -11,6 +11,11 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from app.core.db.base_class import Base
+
+user_achievements = Table('user_achievements', Base.metadata,
+                          Column('user_id', UUID(as_uuid=True), ForeignKey('users.user_id')),
+                          Column('achievement_id', UUID(as_uuid=True), ForeignKey('achievements.id'))
+                          )
 
 
 class PortalRole(str, Enum):
@@ -25,8 +30,7 @@ class User(Base):
     email = Column(String, nullable=False, unique=True, index=True)
     created_at = Column(DateTime(timezone=True), default=func.now())
     password = Column(String, nullable=False)
-    wheelchair = Column(Boolean)
-    blind = Column(Boolean)
+    achievements = relationship("Achievements", secondary=user_achievements, backref="users")
     admin_role_id = Column(UUID(as_uuid=True), ForeignKey("roles.id"))
     tokens = relationship("IssuedJWTToken", backref="User", lazy="noload")
     admin_role = relationship("Roles", backref="User", lazy="noload")
@@ -37,6 +41,7 @@ class User(Base):
 
     @property
     def is_superadmin(self) -> bool:
+        print(self.admin_role.role)
         return self.admin_role.role == PortalRole.ROLE_PORTAL_SUPERADMIN
 
 
@@ -52,5 +57,3 @@ class Roles(Base):
     def remove_admin_privileges_from_model(self):
         if self.is_admin:
             return {role for role in self.roles if role != PortalRole.ROLE_PORTAL_ADMIN}
-
-

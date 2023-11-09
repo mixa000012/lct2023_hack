@@ -10,11 +10,11 @@ from app.user.schema import UserUpdateData
 
 
 class UserAccessor(ModelAccessor[User, UserCreate, UserUpdateData]):
-    async def get_by_email(self, nickname, db: AsyncSession):
+    async def get_by_email(self, email, db: AsyncSession):
         user = await db.execute(
             select(User)
-            .options(selectinload(User.admin_role))
-            .where(User.email == nickname)
+            .options(selectinload(User.admin_role), selectinload(User.achievements))
+            .where(User.email == email)
         )
         user = user.scalar()
         return user
@@ -27,7 +27,7 @@ class UserAccessor(ModelAccessor[User, UserCreate, UserUpdateData]):
     async def get(self, db: AsyncSession, user_id):
         stmt = (
             select(User)
-            .options(selectinload(User.admin_role))
+            .options(selectinload(User.admin_role), selectinload(User.achievements))
             .where(User.user_id == user_id)
         )
         user = await db.execute(stmt)

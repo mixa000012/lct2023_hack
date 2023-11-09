@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 from starlette import status
 
+from app.core import store
 from app.core.config import settings
 from app.core.deps import get_db
 from app.user.jwt.base.token_types import TokenType
@@ -38,10 +39,7 @@ async def get_current_user_from_token(
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-    user = await db.execute(
-        select(User).options(selectinload(User.admin_role)).where(User.user_id == id)
-    )
-    user = user.scalar()
+    user = await store.user.get(db=db, user_id=id)
     if user is None:
         raise credentials_exception
     return user
@@ -55,6 +53,7 @@ async def get_device_id_from_token(
     )
     device_id = payload.get("device_id")
     return device_id
+
 
 async def auth_user(nickname: str, password: str, db: AsyncSession) -> None | User:
     user = await db.execute(select(User).where(User.email == nickname))

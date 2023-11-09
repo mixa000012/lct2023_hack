@@ -6,6 +6,7 @@ from typing import Any
 from fastapi import HTTPException
 from pydantic import validator, EmailStr
 from pydantic.main import BaseModel
+from app.achievements.schema import AchievementShow
 
 LETTER_MATCH_PATTERN = re.compile(r"^[а-яА-Яa-zA-Z\-]+$")
 
@@ -47,6 +48,7 @@ class User_(UserUpdateData):
 class UserShow(BaseModel):
     user_id: uuid.UUID
     email: str
+    achievements: list[AchievementShow]
 
     class Config:
         orm_mode = True

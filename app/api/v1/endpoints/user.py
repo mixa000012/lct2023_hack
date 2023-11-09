@@ -46,12 +46,7 @@ async def register(
 async def login_for_token(
         form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)
 ) -> TokensOut:
-    try:
-        tokens, error = await auth_service.login(form_data=form_data, db=db)
-    except UserDoesntExist:
-        raise HTTPException(
-            status_code=401, detail="There is no user in database with this fio"
-        )
+    tokens, error = await auth_service.login(form_data=form_data, db=db)
     return tokens
 
 
