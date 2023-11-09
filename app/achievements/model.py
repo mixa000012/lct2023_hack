@@ -19,3 +19,4 @@ class Achievements(Base):
     created_at = Column(DateTime(timezone=True), default=func.now())
     description = Column(String)
     title = Column(String, nullable=False)
+    image = Column(String)

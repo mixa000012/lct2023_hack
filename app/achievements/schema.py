@@ -4,7 +4,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Any
 
-from fastapi import HTTPException
+from fastapi import HTTPException, UploadFile
 from pydantic import validator, EmailStr
 from pydantic.main import BaseModel
 
@@ -18,7 +18,7 @@ class AchievementBase(BaseModel):
 
 
 class AchievementCreate(AchievementBase):
-    pass
+    image: UploadFile
 
 
 class AchievementsUpdate(AchievementBase):

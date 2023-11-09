@@ -1,7 +1,8 @@
 from uuid import UUID
 
-from fastapi import Depends, Body, status
+from fastapi import Depends, Body, status, UploadFile
 from fastapi import HTTPException
+from fastapi.params import File
 from fastapi.routing import APIRouter
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.exc import IntegrityError
@@ -31,12 +32,7 @@ router = APIRouter()
     }
 }})
 async def create_achievements(
-        obj: AchievementCreate = Body(examples=[
-            {
-                'title': 'Топ 1 среди лучших',
-                'description': 'Уууу красава)))'
-            }
-        ]), db: AsyncSession = Depends(get_db)
+        obj: AchievementCreate, db: AsyncSession = Depends(get_db)
 ) -> AchievementShow:
     achievement = await achievement_service.create_achievements(obj=obj, db=db)
     return achievement
@@ -88,3 +84,8 @@ async def give_achievement_to_user(user_id: UUID, achievement_id: UUID, db: Asyn
                                    current_user: User = Depends(get_current_user_from_token)) -> UserShow:
     return await achievement_service.give_achievement_to_user(user_id=user_id, achievement_id=achievement_id,
                                                               current_user=current_user, db=db)
+
+
+@router.post('/upload_file')
+async def upload_file(file: UploadFile = File(...)):
+    return await achievement_service.upload_image(file)

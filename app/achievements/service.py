@@ -3,9 +3,10 @@ from datetime import timedelta
 from enum import Enum
 from uuid import UUID
 
-from fastapi import Body
+from fastapi import Body, UploadFile
 from fastapi import Depends
 from fastapi import HTTPException
+from fastapi.params import File
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -31,17 +32,26 @@ AchievementAlreadyExist = HTTPException(status_code=409, detail="Achievement alr
 
 Forbidden = HTTPException(status_code=403, detail="forbidden.")
 
+IMAGEDIR = 'images/'
+
 
 class AchievementService:
-    async def create_achievements(self, obj: AchievementCreate, db: AsyncSession = Depends(get_db)) -> AchievementBase:
+    async def create_achievements(self, obj: AchievementCreate, db: AsyncSession = Depends(get_db),
+                                  file: UploadFile = File(...)) -> AchievementBase:
         achievement = await store.achievements.get_by_title(obj.title, db)
         if achievement:
             raise AchievementAlreadyExist
+        file.filename = f"{uuid.uuid4()}.jpg"
+        contents = await file.read()
+        path = f'{IMAGEDIR}{file.filename}'
+        with open(path, 'wb') as f:
+            f.write(contents)
         achievement = await store.achievements.create(
             db,
             obj_in=AchievementCreate(
                 title=obj.title,
-                description=obj.description
+                description=obj.description,
+                image=path
             )
         )
         return achievement
@@ -81,6 +91,14 @@ class AchievementService:
         user.achievements.append(achievement)
         await db.commit()
         return user
+
+    async def upload_image(self, file: UploadFile = File(...)):
+        file.filename = f"{uuid.uuid4()}.jpg"
+        contents = await file.read()
+        path = f'{IMAGEDIR}{file.filename}'
+        with open(path, 'wb') as f:
+            f.write(contents)
+        return file.filename
 
 
 achievement_service = AchievementService()
