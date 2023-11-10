@@ -47,6 +47,8 @@ class AchievementService:
         file.filename = f"{uuid.uuid4()}.jpg"
         contents = await file.read()
         path = f'{IMAGEDIR}{file.filename}'
+        filepath = Path(IMAGEDIR)
+        filepath.mkdir(parents=True, exist_ok=True)
         with open(path, 'wb') as f:
             f.write(contents)
         achievement = await store.achievements.create(
