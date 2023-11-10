@@ -1,8 +1,8 @@
 """add achievements
 
-Revision ID: 88a8a6b0d0a3
+Revision ID: 36677a094883
 Revises: 
-Create Date: 2023-11-09 20:23:23.308376
+Create Date: 2023-11-10 22:00:50.835646
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '88a8a6b0d0a3'
+revision: str = '36677a094883'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -25,6 +25,7 @@ def upgrade() -> None:
     sa.Column('created_at', sa.DateTime(timezone=True), nullable=True),
     sa.Column('description', sa.String(), nullable=True),
     sa.Column('title', sa.String(), nullable=False),
+    sa.Column('image', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('roles',
