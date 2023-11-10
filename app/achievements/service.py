@@ -11,6 +11,7 @@ from fastapi import HTTPException
 from fastapi.params import File
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.responses import FileResponse
 
 from app.core import store
 from app.core.config import settings
@@ -98,11 +99,19 @@ class AchievementService:
         file.filename = f"{uuid.uuid4()}.jpg"
         contents = await file.read()
         path = f'{IMAGEDIR}{file.filename}'
-        filepath = Path("images/")
+        filepath = Path(IMAGEDIR)
         filepath.mkdir(parents=True, exist_ok=True)
         with open(path, 'wb') as f:
             f.write(contents)
         return file.filename
+
+    async def get_file_by_id(self, id):
+        try:
+            path = f'{IMAGEDIR}{id}'
+        except FileNotFoundError:
+            raise HTTPException(400, detail='File not found!')
+
+        return FileResponse(path)
 
 
 achievement_service = AchievementService()

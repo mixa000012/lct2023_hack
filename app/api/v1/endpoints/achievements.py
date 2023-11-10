@@ -1,3 +1,4 @@
+import os
 from uuid import UUID
 
 from fastapi import Depends, Body, status, UploadFile
@@ -7,6 +8,7 @@ from fastapi.routing import APIRouter
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.responses import FileResponse
 
 from app.core.deps import get_db
 from app.achievements import service
@@ -15,7 +17,7 @@ from app.user.model import User
 from app.user.schema import TokenData, LogoutResponse, UserShow
 from app.achievements.schema import AchievementCreate
 from app.achievements.schema import AchievementShow
-from app.achievements.service import AchievementAlreadyExist, Forbidden, AchievementDoesntExist
+from app.achievements.service import AchievementAlreadyExist, Forbidden, AchievementDoesntExist, IMAGEDIR
 from app.user.service import UserDoesntExist
 from app.user.auth.auth_service import auth_service, InvalidTokenError, IncorrectTokenType, TokenAlreadyRevoked
 from app.achievements.service import achievement_service
@@ -89,3 +91,8 @@ async def give_achievement_to_user(user_id: UUID, achievement_id: UUID, db: Asyn
 @router.post('/upload_file')
 async def upload_file(file: UploadFile = File(...)):
     return await achievement_service.upload_image(file)
+
+
+@router.get('get_file')
+async def get_file(id):
+    return await achievement_service.get_file_by_id(id)
