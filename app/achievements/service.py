@@ -2,6 +2,7 @@ import os
 import uuid
 from datetime import timedelta
 from enum import Enum
+from pathlib import Path
 from uuid import UUID
 
 from fastapi import Body, UploadFile
@@ -97,8 +98,8 @@ class AchievementService:
         file.filename = f"{uuid.uuid4()}.jpg"
         contents = await file.read()
         path = f'{IMAGEDIR}{file.filename}'
-        image_dir = os.path.join(IMAGEDIR)
-        os.makedirs(image_dir, exist_ok=True)
+        filepath = Path("images/")
+        filepath.mkdir(parents=True, exist_ok=True)
         with open(path, 'wb') as f:
             f.write(contents)
         return file.filename
