@@ -3,7 +3,7 @@ from uuid import UUID
 
 from fastapi import Depends, Body, status, UploadFile
 from fastapi import HTTPException
-from fastapi.params import File
+from fastapi.params import File, Form
 from fastapi.routing import APIRouter
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.exc import IntegrityError
@@ -33,10 +33,10 @@ router = APIRouter()
         }
     }
 }})
-async def create_achievements(
-        obj: AchievementFile = Depends(), file: UploadFile = File(...), db: AsyncSession = Depends(get_db)
-) -> AchievementShow:
-    achievement = await achievement_service.create_achievements(obj=obj, db=db, file=file)
+async def create_achievements(title: str = Form(...), description: str = File(...), file: UploadFile = File(...),
+                              db: AsyncSession = Depends(get_db)
+                              ) -> AchievementShow:
+    achievement = await achievement_service.create_achievements(title=title, description=description, db=db, file=file)
     return achievement
 
 

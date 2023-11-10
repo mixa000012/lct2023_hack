@@ -39,9 +39,9 @@ IMAGEDIR = 'images/'
 
 
 class AchievementService:
-    async def create_achievements(self, obj: AchievementFile = Depends(), db: AsyncSession = Depends(get_db),
+    async def create_achievements(self, title: str, description: str, db: AsyncSession = Depends(get_db),
                                   file: UploadFile = File(...)) -> AchievementBase:
-        achievement = await store.achievements.get_by_title(obj.title, db)
+        achievement = await store.achievements.get_by_title(title, db)
         if achievement:
             raise AchievementAlreadyExist
         file.filename = f"{uuid.uuid4()}.jpg"
@@ -54,8 +54,8 @@ class AchievementService:
         achievement = await store.achievements.create(
             db,
             obj_in=AchievementCreate(
-                title=obj.title,
-                description=obj.description,
+                title=title,
+                description=description,
                 image=path
             )
         )
