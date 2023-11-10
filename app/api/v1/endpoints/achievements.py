@@ -93,6 +93,6 @@ async def upload_file(file: UploadFile = File(...)):
     return await achievement_service.upload_image(file)
 
 
-@router.get('get_file')
-async def get_file(id):
+@router.get('/get_file')
+async def get_file(id: UUID):
     return await achievement_service.get_file_by_id(id)

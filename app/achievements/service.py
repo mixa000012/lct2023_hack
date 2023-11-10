@@ -18,7 +18,7 @@ from app.core.config import settings
 from app.core.deps import get_db
 from app.user.auth.auth import get_current_user_from_token
 from app.user.model import User, PortalRole
-from app.achievements.schema import AchievementBase, AchievementShow
+from app.achievements.schema import AchievementBase, AchievementShow, AchievementFile
 from app.achievements.schema import AchievementsUpdate
 from app.achievements.schema import AchievementCreate
 from app.user.schema import UserShow
@@ -39,7 +39,7 @@ IMAGEDIR = 'images/'
 
 
 class AchievementService:
-    async def create_achievements(self, obj: AchievementCreate, db: AsyncSession = Depends(get_db),
+    async def create_achievements(self, obj: AchievementFile, db: AsyncSession = Depends(get_db),
                                   file: UploadFile = File(...)) -> AchievementBase:
         achievement = await store.achievements.get_by_title(obj.title, db)
         if achievement:
@@ -107,7 +107,7 @@ class AchievementService:
 
     async def get_file_by_id(self, id):
         try:
-            path = f'{IMAGEDIR}{id}'
+            path = f'{IMAGEDIR}{id}.jpg'
         except FileNotFoundError:
             raise HTTPException(400, detail='File not found!')
 

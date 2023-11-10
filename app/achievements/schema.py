@@ -17,8 +17,12 @@ class AchievementBase(BaseModel):
         orm_mode = True
 
 
-class AchievementCreate(AchievementBase):
+class AchievementFile(AchievementBase):
     image: UploadFile
+
+
+class AchievementCreate(AchievementBase):
+    image: str
 
 
 class AchievementsUpdate(AchievementBase):
