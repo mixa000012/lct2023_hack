@@ -15,7 +15,7 @@ from app.achievements import service
 from app.user.auth.auth import get_current_user_from_token, get_device_id_from_token
 from app.user.model import User
 from app.user.schema import TokenData, LogoutResponse, UserShow
-from app.achievements.schema import AchievementCreate
+from app.achievements.schema import AchievementCreate, AchievementFile
 from app.achievements.schema import AchievementShow
 from app.achievements.service import AchievementAlreadyExist, Forbidden, AchievementDoesntExist, IMAGEDIR
 from app.user.service import UserDoesntExist
@@ -34,9 +34,9 @@ router = APIRouter()
     }
 }})
 async def create_achievements(
-        obj: AchievementCreate, db: AsyncSession = Depends(get_db)
+        obj: AchievementFile = Depends(), file: UploadFile = File(...), db: AsyncSession = Depends(get_db)
 ) -> AchievementShow:
-    achievement = await achievement_service.create_achievements(obj=obj, db=db)
+    achievement = await achievement_service.create_achievements(obj=obj, db=db, file=file)
     return achievement
 
 

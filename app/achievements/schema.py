@@ -18,8 +18,7 @@ class AchievementBase(BaseModel):
 
 
 class AchievementFile(AchievementBase):
-    image: UploadFile
-
+    pass
 
 class AchievementCreate(AchievementBase):
     image: str

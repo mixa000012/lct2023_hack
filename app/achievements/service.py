@@ -39,7 +39,7 @@ IMAGEDIR = 'images/'
 
 
 class AchievementService:
-    async def create_achievements(self, obj: AchievementFile, db: AsyncSession = Depends(get_db),
+    async def create_achievements(self, obj: AchievementFile = Depends(), db: AsyncSession = Depends(get_db),
                                   file: UploadFile = File(...)) -> AchievementBase:
         achievement = await store.achievements.get_by_title(obj.title, db)
         if achievement:
