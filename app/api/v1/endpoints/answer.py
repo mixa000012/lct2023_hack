@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.deps import get_db
 from app.user.auth.auth import get_current_user_from_token, get_device_id_from_token
-from app.questions import service
+from app.answers import service
 from app.answers.service import QuestionDoenstExist
 from app.answers.schema import AnswerCreate, AnswerBase, AnswerCreateWithId, AnswerShow
 from app.user.model import User
@@ -17,10 +17,11 @@ router = APIRouter()
 
 
 @router.post('/')
-async def create_answer(obj: AnswerCreate, db: AsyncSession = Depends(get_db),
-                        current_user: User = Depends(get_current_user_from_token)) -> AnswerShow:
+async def create_answer(option_ids: List[UUID], question_id: UUID, db: AsyncSession = Depends(get_db),
+                        current_user: User = Depends(get_current_user_from_token)):
     try:
-        answer = await service.create_answer(db=db, obj=obj, current_user=current_user)
+        answer = await service.check_answers(db=db, current_user=current_user, option_ids=option_ids,
+                                             question_id=question_id)
     except QuestionDoenstExist:
         raise HTTPException(status_code=422, detail="Question doesn't exists")
     return answer

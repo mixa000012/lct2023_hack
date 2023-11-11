@@ -20,4 +20,5 @@ class Option(Base):
     __tablename__ = 'options'
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     text = Column(String)
+    is_correct = Column(Boolean, default=False)
     question_id = Column(UUID, ForeignKey('questions.id'))

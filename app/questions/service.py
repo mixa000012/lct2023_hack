@@ -29,10 +29,3 @@ class QuestionDoenstExist(Exception):
     pass
 
 
-async def get_answers_from_question(question_id, db: AsyncSession = Depends(get_db)):
-    question = await store.question.get(id=question_id, db=db)
-    if question:
-        answers = await store.question.get_by_question(question_id, db)
-    else:
-        raise QuestionDoenstExist
-    return answers

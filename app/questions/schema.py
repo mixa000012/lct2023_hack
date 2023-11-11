@@ -7,6 +7,7 @@ from pydantic.main import BaseModel
 
 class OptionSchema(BaseModel):
     text: str
+    is_correct: bool
 
 
 class OptionCreate(OptionSchema):

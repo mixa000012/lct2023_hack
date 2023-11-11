@@ -8,7 +8,7 @@ from pydantic.main import BaseModel
 
 class AnswerBase(BaseModel):
     question_id: uuid.UUID | None
-    is_checked: bool | None
+    is_answered: bool | None
     text: str | None
 
     class Config:

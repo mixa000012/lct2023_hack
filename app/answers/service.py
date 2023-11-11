@@ -1,6 +1,11 @@
+from typing import List
+from uuid import UUID
+
 from fastapi import APIRouter, Request, FastAPI, WebSocket, WebSocketDisconnect
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Depends
+
+from app.answers.model import Answer
 from app.core.deps import get_db
 from app.core import store
 from app.answers.schema import AnswerCreate, AnswerShow, AnswerCreateWithId
@@ -10,6 +15,25 @@ from app.user.model import User
 
 class QuestionDoenstExist(Exception):
     pass
+
+
+async def get_answers_from_question(question_id, db: AsyncSession = Depends(get_db)):
+    question = await store.question.get(id=question_id, db=db)
+    if question:
+        answers = await store.question.get_by_question(question_id, db)
+    else:
+        raise QuestionDoenstExist
+    return answers
+
+
+async def check_answers(option_ids: List[UUID], current_user: User, question_id: UUID,
+                        db: AsyncSession = Depends(get_db)):
+    for option_id in option_ids:
+        answer = Answer(option_id=option_id, user_id=current_user.user_id, is_answered=True)
+        if not await store.answer.is_exist(db=db, user_id=current_user.user_id, option_id=option_id):
+            await store.answer.create(db=db, db_obj=answer)
+    correct_answers = await store.answer.get_count_answers(user_id=current_user.user_id, db=db, question_id=question_id)
+    return len(correct_answers)
 
 
 async def create_answer(obj: AnswerCreate, current_user: User, db: AsyncSession = Depends(get_db)) -> AnswerShow:
@@ -30,5 +54,3 @@ async def get_answers_from_question_with_text(question_id, db: AsyncSession = De
     else:
         raise QuestionDoenstExist
     return answers
-
-
