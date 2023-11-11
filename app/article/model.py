@@ -16,3 +16,12 @@ class Article(Base):
     created_at = Column(DateTime(timezone=True), default=func.now())
     expire_at = Column(DateTime(timezone=True))
     questions = relationship("Question", backref="article", lazy='noload')
+
+
+class Deadlines(Base):
+    __tablename__ = 'deadline'
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(UUID, ForeignKey('users.user_id'))
+    article_id = Column(UUID, ForeignKey('article.id'))
+    articles = relationship("Article", backref="deadline", lazy='noload')
+    expire_at = Column(DateTime(timezone=True))

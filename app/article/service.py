@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Depends
 from app.core.deps import get_db
@@ -15,3 +17,11 @@ async def create_arcticle(obj_in: ArticleCreate, current_user: User, db: AsyncSe
 async def get_questions(id, db: AsyncSession):
     questions = await store.survey.get_questions(id=id, db=db)
     return questions
+
+
+async def get_deadlines_from_user(current_user: User, db: AsyncSession):
+    return await store.survey.get_deadlines_from_user(db=db, current_user=current_user)
+
+
+async def get_deadline(current_user: User, db: AsyncSession, survey_id):
+    return await store.survey.get_deadline(db=db, current_user=current_user, survey_id=survey_id)

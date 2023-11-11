@@ -28,3 +28,13 @@ class ArticleShow(ArticleBase):
     created_at: datetime
     id: uuid.UUID
     questions: List[QuestionBase]
+
+
+class Deadline(BaseModel):
+    user_id: uuid.UUID
+    article_id: uuid.UUID
+    expire_at: datetime | None
+    articles: ArticleShow
+
+    class Config:
+        orm_mode = True
