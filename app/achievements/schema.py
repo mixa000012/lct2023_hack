@@ -7,6 +7,7 @@ from typing import Any
 from fastapi import HTTPException, UploadFile
 from pydantic import validator, EmailStr
 from pydantic.main import BaseModel
+from starlette.responses import FileResponse
 
 
 class AchievementBase(BaseModel):
@@ -19,6 +20,7 @@ class AchievementBase(BaseModel):
 
 class AchievementFile(AchievementBase):
     pass
+
 
 class AchievementCreate(AchievementBase):
     image: str

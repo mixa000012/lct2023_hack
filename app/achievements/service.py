@@ -44,7 +44,8 @@ class AchievementService:
         achievement = await store.achievements.get_by_title(title, db)
         if achievement:
             raise AchievementAlreadyExist
-        file.filename = f"{uuid.uuid4()}.jpg"
+        file_id = uuid.uuid4()
+        file.filename = f"{file_id}.jpg"
         contents = await file.read()
         path = f'{IMAGEDIR}{file.filename}'
         filepath = Path(IMAGEDIR)
@@ -56,7 +57,7 @@ class AchievementService:
             obj_in=AchievementCreate(
                 title=title,
                 description=description,
-                image=path
+                image=str(file_id)
             )
         )
         return achievement
@@ -114,6 +115,9 @@ class AchievementService:
             raise HTTPException(400, detail='File not found!')
 
         return FileResponse(path)
+
+    async def get_achievement(self, id: UUID, db: AsyncSession):
+        return await store.achievements.get(db=db, id=id)
 
 
 achievement_service = AchievementService()

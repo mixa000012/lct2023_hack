@@ -88,9 +88,9 @@ async def give_achievement_to_user(user_id: UUID, achievement_id: UUID, db: Asyn
                                                               current_user=current_user, db=db)
 
 
-@router.post('/upload_file')
-async def upload_file(file: UploadFile = File(...)):
-    return await achievement_service.upload_image(file)
+@router.get('/')
+async def get_achievement(id: UUID, db: AsyncSession = Depends(get_db)):
+    return await achievement_service.get_achievement(id=id, db=db)
 
 
 @router.get('/get_file')
