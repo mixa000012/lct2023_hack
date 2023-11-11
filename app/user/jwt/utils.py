@@ -1,10 +1,10 @@
 import uuid
+
 from jose import JWTError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.user.jwt.base.auth import JWTAuth
-from app.user.jwt.model import IssuedJWTToken
 from app.core import store
+from app.user.jwt.base.auth import JWTAuth
 
 
 def generate_device_id() -> str:

@@ -1,12 +1,10 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
 
-from app.core.db.CRUD import ModelAccessor
-from app.user.model import Roles
 from app.achievements.model import Achievements
 from app.achievements.schema import AchievementCreate
 from app.achievements.schema import AchievementsUpdate
+from app.core.db.CRUD import ModelAccessor
 
 
 class AchievementsAccessor(ModelAccessor[Achievements, AchievementCreate, AchievementsUpdate]):

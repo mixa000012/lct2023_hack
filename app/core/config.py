@@ -32,6 +32,7 @@ class Settings(BaseSettings):
     SMTP_PASSWORD: str = ""
     access_token_ttl: timedelta = None
     refresh_token_ttl: timedelta = None
+    API_KEY: str = ''
 
     @validator("PG_DATABASE_URI", pre=True)
     def assemble_db_connection(cls, v: str | None, values: Dict[str, Any]) -> Any:

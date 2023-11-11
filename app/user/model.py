@@ -1,11 +1,11 @@
 import uuid
-from enum import Enum
+import enum
 
-from sqlalchemy import Boolean, Table
-from sqlalchemy import Column
+from sqlalchemy import Column, Integer
 from sqlalchemy import DateTime
 from sqlalchemy import ForeignKey
 from sqlalchemy import String
+from sqlalchemy import Table
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -18,10 +18,16 @@ user_achievements = Table('user_achievements', Base.metadata,
                           )
 
 
-class PortalRole(str, Enum):
+class PortalRole(str, enum.Enum):
     ROLE_PORTAL_USER = "ROLE_PORTAL_USER"
     ROLE_PORTAL_ADMIN = "ROLE_PORTAL_ADMIN"
     ROLE_PORTAL_SUPERADMIN = "ROLE_PORTAL_SUPERADMIN"
+
+
+class Grade(str, enum.Enum):
+    JUNIOR = "JUNIOR"
+    MIDDLE = "MIDDLE"
+    SENIOR = "SENIOR"
 
 
 class User(Base):
@@ -30,6 +36,8 @@ class User(Base):
     email = Column(String, nullable=False, unique=True, index=True)
     created_at = Column(DateTime(timezone=True), default=func.now())
     password = Column(String, nullable=False)
+    grade = Column(String)
+    exp = Column(Integer, default=0)
     achievements = relationship("Achievements", secondary=user_achievements, backref="users")
     admin_role_id = Column(UUID(as_uuid=True), ForeignKey("roles.id"))
     tokens = relationship("IssuedJWTToken", backref="User", lazy="noload")

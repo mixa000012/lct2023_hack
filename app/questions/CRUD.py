@@ -1,20 +1,20 @@
 from uuid import UUID
 
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.article.model import Article
 from app.core.db.CRUD import ModelAccessor
 from app.questions.model import Question, Option
-from app.questions.schema import QuestionCreate, QuestionUpdate, OptionCreate
+from app.questions.schema import QuestionCreate, QuestionUpdate
 
 
 class QuestionAccessor(ModelAccessor[Question, QuestionCreate, QuestionUpdate]):
     async def create_question(self, db: AsyncSession, obj_in: QuestionCreate, user_id: UUID):
         question_ = QuestionCreate(text=obj_in.text, options=[], article_id=obj_in.article_id)
         for option_data in obj_in.options:
-            option = Option(text=option_data.text)
+            option = Option(text=option_data.text, is_correct=option_data.is_correct)
             question_.options.append(option)
         obj_in_data = question_.dict()
         db_obj = self.model(**obj_in_data)  # type: ignore

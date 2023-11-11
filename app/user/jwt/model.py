@@ -6,7 +6,6 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import UUID
 
-
 from app.core.db.base_class import Base
 
 

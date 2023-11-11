@@ -1,9 +1,10 @@
-from datetime import datetime
-from app.questions.schema import QuestionBase
 import uuid
+from datetime import datetime
 from typing import List
 
 from pydantic.main import BaseModel
+
+from app.questions.schema import QuestionBase
 
 
 class ArticleBase(BaseModel):

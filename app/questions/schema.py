@@ -1,7 +1,6 @@
 import uuid
 from typing import List
 
-import re
 from pydantic.main import BaseModel
 
 
@@ -30,3 +29,11 @@ class QuestionCreate(QuestionBase):
 
 class QuestionUpdate(QuestionBase):
     pass
+
+
+class QuestionShow(QuestionBase):
+    id: uuid.UUID
+
+
+class GenerateQuiz(BaseModel):
+    article_text: str

@@ -1,10 +1,9 @@
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_
-from sqlalchemy.orm import selectinload
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.answers.model import Answer
-from app.core.db.CRUD import ModelAccessor
 from app.answers.schema import AnswerCreate, AnswerUpdate
+from app.core.db.CRUD import ModelAccessor
 from app.questions.model import Option
 
 
@@ -43,6 +42,7 @@ class AnswerAccessor(ModelAccessor[Answer, AnswerCreate, AnswerUpdate]):
             and_(Answer.user_id == user_id, Option.is_correct == True, Option.question_id == question_id))
         answers = await db.execute(stmt)
         answers = answers.scalars().all()
+        print(answers)
         return answers
 
 

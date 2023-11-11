@@ -1,7 +1,8 @@
-from jose import jwt
 import uuid
-from typing import Any
 from datetime import datetime, timedelta, timezone
+from typing import Any
+
+from jose import jwt
 
 from app.core.config import settings
 from app.user.jwt.base.token_types import TokenType

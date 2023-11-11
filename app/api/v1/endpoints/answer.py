@@ -1,16 +1,15 @@
 from typing import List
 from uuid import UUID
 
-from fastapi.templating import Jinja2Templates
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Request, HTTPException
+from fastapi import APIRouter, HTTPException
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.deps import get_db
-from app.user.auth.auth import get_current_user_from_token, get_device_id_from_token
 from app.answers import service
+from app.answers.schema import AnswerShow
 from app.answers.service import QuestionDoenstExist
-from app.answers.schema import AnswerCreate, AnswerBase, AnswerCreateWithId, AnswerShow
+from app.core.deps import get_db
+from app.user.auth.auth import get_current_user_from_token
 from app.user.model import User
 
 router = APIRouter()

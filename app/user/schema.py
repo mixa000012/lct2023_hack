@@ -3,10 +3,11 @@ import uuid
 from enum import Enum
 from typing import Any
 
-from fastapi import HTTPException
-from pydantic import validator, EmailStr
+from pydantic import EmailStr
 from pydantic.main import BaseModel
+
 from app.achievements.schema import AchievementShow
+from app.user.model import Grade
 
 LETTER_MATCH_PATTERN = re.compile(r"^[а-яА-Яa-zA-Z\-]+$")
 
@@ -18,6 +19,7 @@ class PortalRole(str, Enum):
 
 
 class UserBase(BaseModel):
+    grade: Grade
     email: EmailStr
     password: str
 

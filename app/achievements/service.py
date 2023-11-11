@@ -1,29 +1,21 @@
-import os
 import uuid
-from datetime import timedelta
-from enum import Enum
 from pathlib import Path
 from uuid import UUID
 
-from fastapi import Body, UploadFile
 from fastapi import Depends
 from fastapi import HTTPException
+from fastapi import UploadFile
 from fastapi.params import File
-from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import FileResponse
 
+from app.achievements.schema import AchievementBase, AchievementShow
+from app.achievements.schema import AchievementCreate
 from app.core import store
-from app.core.config import settings
 from app.core.deps import get_db
 from app.user.auth.auth import get_current_user_from_token
-from app.user.model import User, PortalRole
-from app.achievements.schema import AchievementBase, AchievementShow, AchievementFile
-from app.achievements.schema import AchievementsUpdate
-from app.achievements.schema import AchievementCreate
-from app.user.schema import UserShow
+from app.user.model import User
 from app.user.service import UserDoesntExist
-from utils.hashing import Hasher
 
 # from utils.security import create_access_token
 

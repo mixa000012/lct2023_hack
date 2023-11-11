@@ -1,11 +1,13 @@
-import enum
 from sqlalchemy import Column, ForeignKey
 import uuid
-from sqlalchemy import String, Enum, Boolean
+import uuid
+
+from sqlalchemy import Column, ForeignKey
+from sqlalchemy import String, Boolean
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
+
 from app.core.db.base_class import Base
-from app.article.model import Article
 
 
 class Question(Base):

@@ -1,26 +1,19 @@
-import os
 from uuid import UUID
 
-from fastapi import Depends, Body, status, UploadFile
-from fastapi import HTTPException
+import aiohttp as aiohttp
+from fastapi import Depends, UploadFile
 from fastapi.params import File, Form
 from fastapi.routing import APIRouter
-from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
-from starlette.responses import FileResponse
 
-from app.core.deps import get_db
-from app.achievements import service
-from app.user.auth.auth import get_current_user_from_token, get_device_id_from_token
-from app.user.model import User
-from app.user.schema import TokenData, LogoutResponse, UserShow
-from app.achievements.schema import AchievementCreate, AchievementFile
 from app.achievements.schema import AchievementShow
-from app.achievements.service import AchievementAlreadyExist, Forbidden, AchievementDoesntExist, IMAGEDIR
-from app.user.service import UserDoesntExist
-from app.user.auth.auth_service import auth_service, InvalidTokenError, IncorrectTokenType, TokenAlreadyRevoked
+from app.achievements.service import AchievementAlreadyExist, Forbidden, AchievementDoesntExist
 from app.achievements.service import achievement_service
+from app.core.deps import get_db
+from app.user.auth.auth import get_current_user_from_token
+from app.user.model import User
+from app.user.schema import UserShow
+from app.user.service import UserDoesntExist
 
 router = APIRouter()
 
@@ -96,3 +89,21 @@ async def get_achievement(id: UUID, db: AsyncSession = Depends(get_db)):
 @router.get('/get_file')
 async def get_file(id: UUID):
     return await achievement_service.get_file_by_id(id)
+
+
+@router.post('/send_notification')
+async def send_notification(summary: str, content: str, message_id: str, username: str):
+    url = 'https://lapsha.vladexa.ru/api/sendNotificationToUser'
+    data = {
+        'summary': f'{summary}',
+        'content': f'{content}',
+        'message_id': f'{message_id}',
+        'username': f'{username}'
+    }
+
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url, json=data) as response:
+            if response.status == 200:
+                return 'Уведомление успешно отправлено'
+            else:
+                return 'Ошибка при отправке уведомления'

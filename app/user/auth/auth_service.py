@@ -1,37 +1,24 @@
-from select import select
-
 from app.user.jwt.base.auth import JWTAuth
-from fastapi import Depends
 
-from app.user.jwt.base.token_types import TokenType
-from app.user.jwt.errors import AccessError
-from app.user.jwt.utils import check_revoked, generate_device_id, try_decode_token
-from app.user.auth.errors import AuthError, ErrorObj
-from app.user.jwt.model import IssuedJWTToken
-from app.core.store import jwt_access
-from app.user.jwt.schema import JwtCreate
-from app.user.auth.dto import TokensDTO, UserCredentialsDTO
 from enum import Enum
 
-from fastapi import Body
 from fastapi import Depends, status
 from fastapi import HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core import store
-from app.core.config import settings
-from app.core.deps import get_db
 from app.user.auth.auth import auth_user
-from app.user.auth.auth import get_current_user_from_token
+from app.user.auth.dto import TokensDTO
+from app.user.auth.errors import ErrorObj
+from app.user.jwt.base.auth import JWTAuth
+from app.user.jwt.base.token_types import TokenType
+from app.user.jwt.schema import JwtCreate
+from app.user.jwt.utils import check_revoked, generate_device_id, try_decode_token
 from app.user.model import User
-from app.user.schema import User_
 from app.user.schema import UserBase
 from app.user.schema import UserCreate
-from app.user.schema import UserShow
-from app.user.schema import UserUpdateData
 from app.user.service import UserDoesntExist
-from app.user.utils import get_sha256_hash
 from utils.hashing import Hasher
 
 UserAlreadyExist = HTTPException(status_code=status.HTTP_409_CONFLICT, detail="User already exists")
@@ -65,6 +52,7 @@ class AuthService:
                 email=obj.email,
                 password=Hasher.get_hashed_password(obj.password),
                 admin_role=role,
+                grade=obj.grade
             ),
         )
         access_token, refresh_token = await self._issue_tokens_for_user(user=user, db=db)

@@ -1,15 +1,13 @@
 from typing import List
 from uuid import UUID
 
-from fastapi import APIRouter, Request, FastAPI, WebSocket, WebSocketDisconnect
-from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Depends
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.answers.model import Answer
-from app.core.deps import get_db
+from app.answers.schema import AnswerCreate, AnswerShow
 from app.core import store
-from app.answers.schema import AnswerCreate, AnswerShow, AnswerCreateWithId
-from app.user.auth.auth import get_current_user_from_token, get_device_id_from_token
+from app.core.deps import get_db
 from app.user.model import User
 
 
@@ -33,6 +31,8 @@ async def check_answers(option_ids: List[UUID], current_user: User, question_id:
         if not await store.answer.is_exist(db=db, user_id=current_user.user_id, option_id=option_id):
             await store.answer.create(db=db, db_obj=answer)
     correct_answers = await store.answer.get_count_answers(user_id=current_user.user_id, db=db, question_id=question_id)
+    current_user.exp += len(correct_answers) * 5
+    await db.commit()
     return len(correct_answers)
 
 

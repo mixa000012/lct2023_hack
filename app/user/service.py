@@ -1,23 +1,20 @@
-from datetime import timedelta
 from enum import Enum
 from uuid import UUID
 
 from fastapi import Body
 from fastapi import Depends
 from fastapi import HTTPException
-from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core import store
-from app.core.config import settings
 from app.core.deps import get_db
 from app.user.auth.auth import get_current_user_from_token
 from app.user.model import User
-from app.user.schema import User_
 from app.user.schema import UserBase
 from app.user.schema import UserCreate
 from app.user.schema import UserShow
 from app.user.schema import UserUpdateData
+from app.user.schema import User_
 from utils.hashing import Hasher
 
 # from utils.security import create_access_token
@@ -47,22 +44,6 @@ class PortalRole(str, Enum):
 #         expires_delta=access_token_expires,
 #     )
 #     return access_token
-
-
-async def create_user(obj: UserBase, db: AsyncSession = Depends(get_db)) -> UserShow:
-    user = await store.user.get_by_email(obj.email, db)
-    if user:
-        raise UserAlreadyExist
-    role = await store.user.get_role(db, PortalRole.ROLE_PORTAL_USER)
-    user = await store.user.create(
-        db,
-        obj_in=UserCreate(
-            email=obj.email,
-            password=Hasher.get_hashed_password(obj.password),
-            admin_role=role,
-        ),
-    )
-    return user
 
 
 async def update_user(

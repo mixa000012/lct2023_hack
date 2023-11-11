@@ -2,10 +2,10 @@ from sqlalchemy import select, and_
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from app.core.db.CRUD import ModelAccessor, CreateSchemaType, ModelType
 from app.article.model import Article, Deadlines
+from app.article.schema import ArticleUpdate, ArticleCreate
+from app.core.db.CRUD import ModelAccessor, CreateSchemaType, ModelType
 from app.questions.model import Question
-from app.article.schema import ArticleBase, ArticleUpdate, ArticleCreate
 from app.user.model import User
 
 

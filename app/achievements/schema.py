@@ -1,13 +1,7 @@
-import re
 import uuid
 from datetime import datetime
-from enum import Enum
-from typing import Any
 
-from fastapi import HTTPException, UploadFile
-from pydantic import validator, EmailStr
 from pydantic.main import BaseModel
-from starlette.responses import FileResponse
 
 
 class AchievementBase(BaseModel):

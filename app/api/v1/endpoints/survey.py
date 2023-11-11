@@ -5,11 +5,11 @@ from fastapi import APIRouter
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.deps import get_db
-from app.user.auth.auth import get_current_user_from_token, get_device_id_from_token
 from app.article import service
+from app.article.schema import ArticleCreate, ArticleShow, Deadline
+from app.core.deps import get_db
+from app.user.auth.auth import get_current_user_from_token
 from app.user.model import User
-from app.article.schema import ArticleCreate, ArticleBase, ArticleShow, Deadline
 
 router = APIRouter()
 

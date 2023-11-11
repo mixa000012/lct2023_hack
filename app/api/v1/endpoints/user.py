@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from fastapi import Depends, Body, status
+from fastapi import Depends, Body
 from fastapi import HTTPException
 from fastapi.routing import APIRouter
 from fastapi.security import OAuth2PasswordRequestForm
@@ -10,14 +10,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.deps import get_db
 from app.user import service
 from app.user.auth.auth import get_current_user_from_token, get_device_id_from_token
+from app.user.auth.auth_service import auth_service, InvalidTokenError, IncorrectTokenType, TokenAlreadyRevoked
+from app.user.auth.schema import TokensOut, UpdateTokensIn
 from app.user.model import User
-from app.user.schema import TokenData, LogoutResponse
+from app.user.schema import LogoutResponse
 from app.user.schema import UserBase
 from app.user.schema import UserShow
 from app.user.service import UserAlreadyExist
 from app.user.service import UserDoesntExist
-from app.user.auth.auth_service import auth_service, InvalidTokenError, IncorrectTokenType, TokenAlreadyRevoked
-from app.user.auth.schema import TokensOut, UpdateTokensIn
 
 router = APIRouter()
 
@@ -34,7 +34,8 @@ async def register(
         obj: UserBase = Body(examples=[
             {
                 'email': 'user@mail.ru',
-                'password': 'password'
+                'password': 'password',
+                'grade': 'JUNIOR'
             }
         ]), db: AsyncSession = Depends(get_db)
 ) -> TokensOut:

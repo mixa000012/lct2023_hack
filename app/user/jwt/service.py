@@ -1,13 +1,12 @@
-from fastapi import Request, Security
-from fastapi.security.api_key import APIKeyHeader
-from jwt import decode, InvalidTokenError
 from app.internal.users.models import APIUser
-
-from app.pkg.auth.middlewares.jwt.errors import AccessError
 from app.pkg.auth.middlewares.jwt.base.token_types import TokenType
+from app.pkg.auth.middlewares.jwt.errors import AccessError
 from app.pkg.auth.middlewares.jwt.utils import check_revoked
 from app.pkg.exceptions import JsonHTTPException
 from config.settings import jwt_config
+from fastapi import Request, Security
+from fastapi.security.api_key import APIKeyHeader
+from jwt import decode, InvalidTokenError
 
 
 def __try_to_get_clear_token(authorization_header: str) -> str:
